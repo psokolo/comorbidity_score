@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "comorbidity-score-calc"
+version = "0.1.0"
+description = "Calculate comorbidity scores (Charlson, Quan, etc.) from ICD-10 codes"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Your Name", email = "your@email.com" }
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/psokolo/comorbidity_score"
+"Bug Tracker" = "https://github.com/psokolo/comorbidity_score/issues"

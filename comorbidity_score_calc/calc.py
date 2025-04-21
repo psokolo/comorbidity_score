@@ -1,9 +1,10 @@
+import os
 import json
 from typing import Union, List
 
 
 # Enter the local path for the JSON file:
-file_path = ''
+file_path = os.path.join(os.path.dirname(__file__), "codes.json")
 with open(file_path, 'r') as file:
     __mappingdata = json.load(file)
 
