@@ -87,7 +87,7 @@ def __check_codes(icd_codes: Union[str, List[str]], code_group: dict, exact_code
             return all(any(code.startswith(prefix) for code in icd_codes) for group in codes for prefix in group)
         return False
 
-def calculate_score(*, icd_codes: Union[str, list], mapping:str = "cci_icd2024gm", exact_codes:bool = False) -> tuple:
+def calculate_score(*, icd_codes: Union[str, list], mapping:str = "cci_icd2024gm", exact_codes:bool = False) -> Tuple[int, List[str]]:
     '''
         Calculates the chosen Comorbidity Score
         For now, only the Charlson Comorbidity Index (Deyo modification) is available.
