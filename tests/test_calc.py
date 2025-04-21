@@ -62,3 +62,10 @@ class TestCalculateScore(unittest.TestCase):
         result_upper = calculate_score(icd_codes=["K70"], mapping="cci_icd2024gm")
         result_lower = calculate_score(icd_codes=["k70"], mapping="cci_icd2024gm")
         self.assertEqual(result_upper, result_lower)
+
+    def test_exact_code_matching():
+        result = calculate_score(icd_codes="K70.1", mapping="cci_icd2024gm", exact_codes=True)
+        self.assertEqual(result[0], 1)  # Should match exactly
+
+        result = calculate_score(icd_codes="K70.19", mapping="cci_icd2024gm", exact_codes=True)
+        self.assertEqual(result[0], 0)  # Should not match prefix
