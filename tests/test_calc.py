@@ -63,9 +63,28 @@ class TestCalculateScore(unittest.TestCase):
         result_lower = calculate_score(icd_codes=["k70"], mapping="cci_icd2024gm")
         self.assertEqual(result_upper, result_lower)
 
-    def test_exact_code_matching():
+    def test_exact_code_matching(self):
         result = calculate_score(icd_codes="K70.1", mapping="cci_icd2024gm", exact_codes=True)
         self.assertEqual(result[0], 1)  # Should match exactly
 
         result = calculate_score(icd_codes="K70.19", mapping="cci_icd2024gm", exact_codes=True)
         self.assertEqual(result[0], 0)  # Should not match prefix
+
+    def test_both_condition_group_matching(self):
+        """Test that 'both' condition correctly requires at least one match per group."""
+        # Example for 'liver_severe': requires one code from group 1 (e.g., I98.2, I98.3)
+        # AND one from group 2 (e.g., K70.4, K71.1, etc.)
+
+        # This should score because both groups are matched
+        result = calculate_score(icd_codes=["I98.2", "K74.4"], mapping="cci_icd2024gm", exact_codes=True)
+        assert "liver_severe" in result[1]
+        assert result[0] >= 3  # liver_severe scores 3 points
+
+        # This should NOT score (only second group matched)
+        result = calculate_score(icd_codes=["K74.4"], mapping="cci_icd2024gm", exact_codes=False)
+        assert "liver_severe" not in result[1]
+
+        # This should NOT score (only first group matched)
+        result = calculate_score(icd_codes=["I98.3"], mapping="cci_icd2024gm", exact_codes=False)
+        assert "liver_severe" not in result[1]
+

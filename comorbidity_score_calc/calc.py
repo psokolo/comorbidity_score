@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Union, List
+from typing import Union, List, Tuple
 
 
 # Enter the local path for the JSON file:
@@ -85,7 +85,11 @@ def __check_codes(icd_codes: Union[str, List[str]], code_group: dict, exact_code
             return any(code.startswith(prefix) for code in icd_codes for prefix in codes)
         elif condition == "both":
             # Check if both conditions are met in case of grouped codes
-            return all(any(code.startswith(prefix) for code in icd_codes) for group in codes for prefix in group)
+
+            return all(
+                any(code.startswith(prefix) for code in icd_codes for prefix in group)
+                for group in codes
+            )
         return False
 
 def calculate_score(*, icd_codes: Union[str, list], mapping:str = "cci_icd2024gm", exact_codes:bool = False) -> Tuple[int, List[str]]:
