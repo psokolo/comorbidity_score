@@ -2,7 +2,7 @@ import os
 import json
 from typing import Union, List, Tuple
 
-
+_loaded_mappings = {}
 
 def list_available_mappings():
     """Lists all available score/icd_version/year combinations in the mappings/ directory."""
@@ -148,8 +148,12 @@ def calculate_score(
     if not os.path.exists(file_path):
         raise ValueError(f"Mapping file '{filename}' not found in 'mappings/' directory.")
 
-    with open(file_path, "r") as f:
-        mapping_data = json.load(f)
+    # load mapping if not loaded before
+    key = (score, icd_version, year)
+    if key not in _loaded_mappings:
+        with open(file_path, "r") as f:
+            _loaded_mappings[key] = json.load(f)
+    mapping_data = _loaded_mappings[key]
 
     # Validate input type
     ## The possible input is either a string when only one ICD Code is given or a list of strings when multiple codes are given
