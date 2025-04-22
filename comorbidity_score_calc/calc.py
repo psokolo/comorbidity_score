@@ -3,15 +3,23 @@ import json
 from typing import Union, List, Tuple
 
 
-# Enter the local path for the JSON file:
-file_path = os.path.join(os.path.dirname(__file__), "codes.json")
-with open(file_path, 'r') as file:
-    __mappingdata = json.load(file)
 
+def list_available_mappings():
+    """Lists all available score/icd_version/year combinations in the mappings/ directory."""
+    base_dir = os.path.join(os.path.dirname(__file__), "mappings")
+    files = [f for f in os.listdir(base_dir) if f.endswith(".json")]
 
-# The mapping names are later used to check whether the user's input is correct and the mapping available
-__mapping_names = list(__mappingdata.keys())
+    mappings = []
+    for file in files:
+        name = file[:-5]  # Remove .json
+        parts = name.split("_")
+        if len(parts) >= 3:
+            score = parts[0]
+            icd_version = parts[1]
+            year = "_".join(parts[2:])
+            mappings.append((score, icd_version, year))
 
+    return mappings
 
 def __check_codes(icd_codes: Union[str, List[str]], code_group: dict, exact_codes: bool) -> bool:
     """
@@ -76,7 +84,6 @@ def __check_codes(icd_codes: Union[str, List[str]], code_group: dict, exact_code
             # Now this function is used to iterate over all groups of the selected category: (any(...) for group in codes)
             # and returns as many boolean values as there are groups within a category.
             # The outermost function all(...) makes sure the category scores only if all the booleans are True
-        return False # If none of the codes was found to match, return False
 
     else:    
     # The logic in this case is analog to the above with the difference of checking for prefixes with the help of .startswith() method
@@ -92,7 +99,14 @@ def __check_codes(icd_codes: Union[str, List[str]], code_group: dict, exact_code
             )
         return False
 
-def calculate_score(*, icd_codes: Union[str, list], mapping:str = "cci_icd2024gm", exact_codes:bool = False) -> Tuple[int, List[str]]:
+def calculate_score(
+    *,
+    icd_codes: Union[str, List[str]],
+    score: str = "charlson",
+    icd_version: str = "icd10gm",
+    year: str = "2024",
+    exact_codes: bool = False
+) -> Tuple[int, List[str]]:
     '''
         Calculates the chosen Comorbidity Score
         For now, only the Charlson Comorbidity Index (Deyo modification) is available.
@@ -128,14 +142,14 @@ def calculate_score(*, icd_codes: Union[str, list], mapping:str = "cci_icd2024gm
         the simpler condition will not contribute to the score if the more severe condition is present.
     '''
     
-    # Check if the mapping name (input as the "mapping" argument) is available and raise 
-    if mapping not in __mapping_names:
-        raise ValueError(
-            f"Invalid mapping '{mapping}'. Available mappings are: {', '.join(__mapping_names)}"
-            )
+    filename = f"{score}_{icd_version}_{year}.json"
+    file_path = os.path.join(os.path.dirname(__file__), "mappings", filename)
 
-    # Assuming correct mapping: According to the value of the 'mapping' argument, choose the right mapping
-    data = __mappingdata[mapping]
+    if not os.path.exists(file_path):
+        raise ValueError(f"Mapping file '{filename}' not found in 'mappings/' directory.")
+
+    with open(file_path, "r") as f:
+        mapping_data = json.load(f)
 
     # Validate input type
     ## The possible input is either a string when only one ICD Code is given or a list of strings when multiple codes are given
@@ -145,13 +159,13 @@ def calculate_score(*, icd_codes: Union[str, list], mapping:str = "cci_icd2024gm
             )
     
     # Initialize variables for points and categories that scored
-    score = 0
+    score_value = 0
     scored_categories = set()
 
     # Iterate over all the categories to check if any of the codes in a given category is in the input using either the prefix-based matching
     # or exact codes, as according to the exact_codes parameter
 
-    for category, details in data.items():
+    for category, details in mapping_data.items():
         for code_group in details["codes"]:
             if __check_codes(icd_codes, code_group, exact_codes = exact_codes):
                 scored_categories.add(category)
@@ -171,7 +185,7 @@ def calculate_score(*, icd_codes: Union[str, list], mapping:str = "cci_icd2024gm
     ## To achieve this, for every category in the set 'scored_categories' the algorithm checks, if this category has an element 'depends_on'
     ## and if that element (the more severe version of the condition) is present in the set, the milder one is removed.    
     for category in list(scored_categories):  # Iterate over a copy of the set to allow modification
-        details = data.get(category, {})
+        details = mapping_data.get(category, {})
         if "depends_on" in details:
             # If the dependency is present in the scored categories, remove this category
             if any(dep in scored_categories for dep in details["depends_on"]):
@@ -179,7 +193,7 @@ def calculate_score(*, icd_codes: Union[str, list], mapping:str = "cci_icd2024gm
 
     # Calculate the score based on the final adjusted scored_categories
     for category in scored_categories:
-        score += data[category]["weight"]
+        score_value += mapping_data[category]["weight"]
 
     # Return the score and the list of scored categories
-    return score, list(scored_categories)
+    return score_value, list(scored_categories)
