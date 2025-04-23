@@ -43,7 +43,7 @@ class TestCalculateScore(unittest.TestCase):
 
     def test_partial_score(self):
         """Test that only matching codes contribute to the score."""
-        result = calculate_score(icd_codes=["B18.2", "ZX99.99"], score="charlson", icd_version="icd10gm_quan", year="2024")
+        result = calculate_score(icd_codes=["B18.2", "ZX99.99"], score="charlson", icd_version="icd10gmquan", year="2024")
         self.assertEqual(result[0], 1)  # Score should be 1 since B18.2 scores 1
         self.assertIsInstance(result[1], list)  # Ensure categories are returned as a list
     
