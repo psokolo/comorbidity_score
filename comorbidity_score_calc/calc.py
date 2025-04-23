@@ -105,8 +105,9 @@ def calculate_score(
     score: str = "charlson",
     icd_version: str = "icd10gm",
     year: str = "2024",
-    exact_codes: bool = False
-) -> Tuple[int, List[str]]:
+    exact_codes: bool = False,
+    return_metadata: bool = False
+) -> Union[Tuple[int, List[str]], Tuple[int, List[str], dict]]:
     '''
         Calculates the chosen Comorbidity Score
         For now, only the Charlson Comorbidity Index (Deyo modification) is available.
@@ -153,7 +154,8 @@ def calculate_score(
     if key not in _loaded_mappings:
         with open(file_path, "r") as f:
             _loaded_mappings[key] = json.load(f)
-    mapping_data = _loaded_mappings[key]
+    meta_data = _loaded_mappings[key].get("_meta", {})
+    mapping_data = _loaded_mappings[key]["mapping"]
 
     # Validate input type
     ## The possible input is either a string when only one ICD Code is given or a list of strings when multiple codes are given
@@ -199,5 +201,8 @@ def calculate_score(
     for category in scored_categories:
         score_value += mapping_data[category]["weight"]
 
-    # Return the score and the list of scored categories
-    return score_value, list(scored_categories)
+    # Return the score and the list of scored categories (and optionally the metadata)
+    if return_metadata:
+        return score_value, list(scored_categories), meta_data
+    else:
+        return score_value, list(scored_categories)
