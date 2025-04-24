@@ -1,0 +1,28 @@
+{
+    "_meta": {
+        "source": "Charlson original",
+        "description": "Original CCI weights (0–6 range)",
+        "source": "Quan et al. (2005)",
+        "doi": "10.1097/01.mlr.0000182534.19832.83"      
+    },
+    "weights": {
+        "liver_mild": 1,
+        "liver_severe": 3,
+        "malignancy_meta": 6, 
+        "malignancy_nonmeta": 2,
+        "aids": 6,
+        "cerebrovascular": 1,
+        "pulmo": 1,
+        "rheumatic": 1,
+        "dementia": 1,
+        "hf": 1,
+        "kidney": 2,
+        "mi": 1,
+        "plegia": 2,
+        "peptic_ulcer": 1,
+        "peripheral_vascular": 1,
+        "dm_complicated": 2,
+        "dm_simple": 1
+        
+    }
+  }

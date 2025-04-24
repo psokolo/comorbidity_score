@@ -3,6 +3,7 @@ import json
 from typing import Union, List, Tuple
 
 _loaded_mappings = {}
+_loaded_weights = {}
 
 def list_available_mappings():
     """Lists all available score/icd_version/year combinations in the mappings/ directory."""
@@ -105,6 +106,8 @@ def calculate_score(
     score: str = "charlson",
     icd_version: str = "icd10gm",
     year: str = "2024",
+    weight_scheme: str ="default",
+    weights_override: dict = None,    
     exact_codes: bool = False,
     return_metadata: bool = False
 ) -> Union[Tuple[int, List[str]], Tuple[int, List[str], dict]]:
@@ -143,19 +146,40 @@ def calculate_score(
         the simpler condition will not contribute to the score if the more severe condition is present.
     '''
     
-    filename = f"{score}_{icd_version}_{year}.json"
-    file_path = os.path.join(os.path.dirname(__file__), "mappings", filename)
+    # load mappings
+    mappings_file = f"{score}_{icd_version}_{year}.json"
+    mappings_path = os.path.join(os.path.dirname(__file__), "mappings", mappings_file)
 
-    if not os.path.exists(file_path):
-        raise ValueError(f"Mapping file '{filename}' not found in 'mappings/' directory.")
+    if not os.path.exists(mappings_path):
+        raise ValueError(f"Mapping file '{mappings_file}' not found in 'mappings/' directory.")
 
     # load mapping if not loaded before
     key = (score, icd_version, year)
     if key not in _loaded_mappings:
-        with open(file_path, "r") as f:
+        with open(mappings_path, "r") as f:
             _loaded_mappings[key] = json.load(f)
     meta_data = _loaded_mappings[key].get("_meta", {})
     mapping_data = _loaded_mappings[key]["mapping"]
+
+    # load weights
+    weights_file = f"{score}_weights_{weight_scheme}.json"
+    weights_path = os.path.join(os.path.dirname(__file__), "weights", weights_file)
+
+    if not os.path.exists(weights_path):
+        raise ValueError(f"Weights file '{weights_file}' not found in 'weights/' directory.")
+
+    # load weights if not loaded before
+    key = (score, weight_scheme)
+    if key not in _loaded_weights:
+        with open(weights_path, "r") as f:
+            _loaded_weights[key] = json.load(f)
+    weights_meta_data = _loaded_weights[key].get("_meta", {})
+    weights = _loaded_weights[key]["weights"]
+
+    # Apply overrides
+    if weights_override:
+        weights.update(weights_override)
+
 
     # Validate input type
     ## The possible input is either a string when only one ICD Code is given or a list of strings when multiple codes are given
@@ -199,7 +223,13 @@ def calculate_score(
 
     # Calculate the score based on the final adjusted scored_categories
     for category in scored_categories:
-        score_value += mapping_data[category]["weight"]
+        if category not in weights:
+            raise ValueError(
+                f"Missing weight for scored category '{category}'. "
+                "Check your weight file or weight overrides."
+            )
+        score_value += weights[category]
+
 
     # Return the score and the list of scored categories (and optionally the metadata)
     if return_metadata:

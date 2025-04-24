@@ -9,7 +9,6 @@
     "mapping": {
         "liver_mild": {
             "name":"Mild liver disease",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -94,7 +93,6 @@
         },
         "liver_severe": {
             "name":"Severe liver disease",
-            "weight": 3,
             "codes": [
                 {
                     "condition": "both", 
@@ -176,7 +174,6 @@
 
         "malignancy_meta": {
             "name":"Metastatic malignancy",
-            "weight": 6,
             "codes": [
                 {
                     "condition": "any", 
@@ -227,7 +224,6 @@
         },
         "malignancy_nonmeta": {
             "name":"Nonmetastatic malignancy",
-            "weight": 2,
             "codes": [
                 {
                     "condition": "any", 
@@ -821,7 +817,6 @@
         },
         "aids": {
             "name":"AIDS",
-            "weight": 6,
             "codes": [
                 {
                     "condition": "any", 
@@ -837,7 +832,6 @@
         },
         "cerebrovascular": {
             "name":"Cerebrovascular disease",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -970,7 +964,6 @@
         },
         "pulmo": {
             "name":"Chronic pulmonary disease",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -1123,7 +1116,6 @@
         },    
         "rheumatic": {
             "name":"Rheumatic disease",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -1299,7 +1291,6 @@
         },
         "dementia": {
             "name":"Dementia",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -1346,7 +1337,6 @@
         },
         "hf": {
             "name":"Heart failure",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -1402,7 +1392,6 @@
         },
         "kidney": {
             "name":"Kidney disease",
-            "weight": 2,
             "codes": [
                 {
                     "condition": "any", 
@@ -1450,7 +1439,6 @@
         },
         "mi": {
             "name":"Myocardial Infarction",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -1481,7 +1469,6 @@
         },
         "plegia": {
             "name":"Plegia or paralysis",
-            "weight": 2,
             "codes": [
                 {
                     "condition": "any", 
@@ -1551,7 +1538,6 @@
         },
         "peptic_ulcer": {
             "name":"Peptic ulcer disease",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -1602,7 +1588,6 @@
         },
         "peripheral_vascular": {
             "name":"Peripheral vascular disease",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
@@ -1653,7 +1638,6 @@
         },
         "dm_complicated": {
             "name":"Diabetes mellitus with end organ complications",
-            "weight": 2,
             "codes": [
                 {
                     "condition": "any", 
@@ -1749,7 +1733,6 @@
         },
         "dm_simple": {
             "name":"Diabetes mellitus without complications",
-            "weight": 1,
             "codes": [
                 {
                     "condition": "any", 
