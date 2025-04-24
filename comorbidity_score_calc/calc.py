@@ -223,7 +223,7 @@ def calculate_score(
 
     # Calculate the score based on the final adjusted scored_categories
     for category in scored_categories:
-        if category not in weights:
+        if category not in weights or weights[category] is None:
             raise ValueError(
                 f"Missing weight for scored category '{category}'. "
                 "Check your weight file or weight overrides."

@@ -11,6 +11,6 @@ class TestMetadataLoading(unittest.TestCase):
             return_metadata=True
         )
         self.assertIsInstance(metadata, dict)
-        self.assertIn("label", metadata)
-        self.assertIn("source", metadata)
-        self.assertEqual(metadata["label"], "Charlson Comorbidity Index")
+        self.assertIn("label", metadata["mapping"])
+        self.assertIn("source", metadata["mapping"])
+        self.assertEqual(metadata["mapping"]["label"], "Charlson Comorbidity Index")
