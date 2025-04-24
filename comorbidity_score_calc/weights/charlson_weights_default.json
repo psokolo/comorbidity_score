@@ -1,6 +1,6 @@
 {
     "_meta": {
-        "source": "Charlson original",
+        "label": "Charlson original",
         "description": "Original CCI weights (0–6 range)",
         "source": "Quan et al. (2005)",
         "doi": "10.1097/01.mlr.0000182534.19832.83"      
