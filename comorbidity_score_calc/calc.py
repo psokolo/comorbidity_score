@@ -233,6 +233,9 @@ def calculate_score(
 
     # Return the score and the list of scored categories (and optionally the metadata)
     if return_metadata:
-        return score_value, list(scored_categories), meta_data
+        return score_value, list(scored_categories), {
+                        "mapping": meta_data,
+                        "weights": weights_meta_data
+                    }
     else:
         return score_value, list(scored_categories)
