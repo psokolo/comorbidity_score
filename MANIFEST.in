@@ -1,3 +1,5 @@
-include comorbidity_score_calc/codes.json
 include README.md
 include LICENSE
+
+recursive-include comorbidity_score_calc/mappings *.json
+recursive-include comorbidity_score_calc/weights *.json

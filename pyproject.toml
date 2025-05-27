@@ -21,3 +21,10 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/psokolo/comorbidity_score"
 "Bug Tracker" = "https://github.com/psokolo/comorbidity_score/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"comorbidity_score_calc.mappings" = ["*.json"]
+"comorbidity_score_calc.weights" = ["*.json"]
