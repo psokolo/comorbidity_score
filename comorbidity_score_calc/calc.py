@@ -3,7 +3,7 @@ from typing import Union, List
 
 
 # Enter the local path for the JSON file:
-file_path = ''
+file_path = '/Users/piotr/Documents/GitHub/comorbidity_score/comorbidity_score_calc/codes.json'
 with open(file_path, 'r') as file:
     __mappingdata = json.load(file)
 

@@ -1,22 +1,26 @@
 import unittest
-from comorbidity_score_calc.calc import calculate_score
+from calc import calculate_score, __check_codes
 
 class TestCalculateScore(unittest.TestCase):
     def test_score(self):
+        """Test that a return from a correct input (scoring 0) is a tuple and is greater or equal 0"""
         result = calculate_score(icd_codes="B18.2", mapping="cci_icd2024gm")
         self.assertIsInstance(result, tuple)  # Ensure result is a tuple
         self.assertGreaterEqual(result[0], 0)  # Score should be non-negative
 
 
     def test_invalid_mapping(self):
+        """Test that using a nonexistent mapping raises ValueError"""
         with self.assertRaises(ValueError):
             calculate_score(icd_codes="B18.2", mapping="invalid_mapping")
     
     def test_invalid_icd(self):
+        """Test that an invalid ICD code (here, an integer) raises TypeEerror"""
         with self.assertRaises(TypeError):
             calculate_score(icd_codes=123)
 
     def test_maximal_score(self):
+        """Test that the maximal score of 29 is not exceeded"""
         result = calculate_score(icd_codes = [
             'K70', 'K70.0', 'K70.4', 'I98.2', 'I98.3', 'C77', 'C77.0', 'C00', 'C00.0', 'B20', 'B21',
             'G45', 'G45.0', 'I27.8', 'I27.9', 'M05', 'M05.0', 'F00', 'F00.0', 'I09.9', 'I11.0',
@@ -38,6 +42,7 @@ class TestCalculateScore(unittest.TestCase):
         self.assertEqual(result, (0, []))  # No codes should result in a score of 0 and no categories scored
     
     def test_nonexistent_code(self):
+        """Test that an nonexistent ICD code returns 0 points and no categories"""
         result = calculate_score(icd_codes=["ZX99.99"])
         self.assertEqual(result, (0, []))  # Code ZX99.99 should not match any category
 
@@ -62,3 +67,6 @@ class TestCalculateScore(unittest.TestCase):
         result_upper = calculate_score(icd_codes=["K70"], mapping="cci_icd2024gm")
         result_lower = calculate_score(icd_codes=["k70"], mapping="cci_icd2024gm")
         self.assertEqual(result_upper, result_lower)
+    
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
