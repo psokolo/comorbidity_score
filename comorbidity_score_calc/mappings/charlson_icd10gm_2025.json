@@ -3,7 +3,7 @@
         "label": "Charlson Comorbidity Index",
         "source": "Sokolowski et al. (2026)",
         "doi": "TBD",
-        "year": "2024",
+        "year": "2025",
         "icd_version": "ICD-10 GM"
     },
     "mapping": {
@@ -31,11 +31,6 @@
                         "K70.1",
                         "K70.2",
                         "K70.3",
-                        "K70.4",
-                        "K70.40",
-                        "K70.41",
-                        "K70.42",
-                        "K70.48",
                         "K70.9",
                         "K71",
                         "K71.0",
